@@ -1,15 +1,27 @@
 package net.vertexgraphics.my3dart
 
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.annotation.StringRes
+import androidx.compose.foundation.Image
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+
+import androidx.compose.ui.graphics.Color
+
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import net.vertexgraphics.my3dart.ui.theme.My3DArtTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,9 +32,9 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
+                    color = Color(resources.getColor(R.color.green_500, theme))
                 ) {
-                    Greeting("Android")
+                    MainScreen()
                 }
             }
         }
@@ -30,14 +42,48 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+fun MainScreen() {
+    var currentImage by remember { mutableStateOf(1)}
+
+    val image = when(currentImage) {
+        1 -> R.drawable.de
+        2 -> R.drawable.akm
+        3 -> R.drawable.kitchen
+        4 -> R.drawable.robot
+        else -> {currentImage = 0
+            R.drawable.logo}
+    }
+    Column(modifier = Modifier
+        .padding(32.dp)
+        .wrapContentSize(align = Alignment.Center)
+        ) {
+        Image(painter = painterResource(id = image), contentDescription = image.toString(),
+            modifier = Modifier.size(400.dp))
+        Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()){
+            ImageFlipButton(label = R.string.previous, value = currentImage, onClick = { if (currentImage > 1) currentImage--})
+            ImageFlipButton(label = R.string.next, value = currentImage, onClick = { currentImage++})
+        }
+    }
+    
+
+    
 }
 
-@Preview(showBackground = true)
+
+@Composable
+fun ImageFlipButton(@StringRes label: Int, value: Int, onClick: (Int)->Unit){
+    Button(onClick = { onClick(value) }, modifier = Modifier.width(120.dp),
+        colors = ButtonDefaults.buttonColors( backgroundColor =
+        Color(LocalContext.current.resources.getColor(R.color.green, LocalContext.current.theme)))) {
+        Text(text = stringResource(id = label))
+    }
+}
+
+
+@Preview(showBackground = false)
 @Composable
 fun DefaultPreview() {
     My3DArtTheme {
-        Greeting("Android")
+        MainScreen()
     }
 }
