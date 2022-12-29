@@ -2,12 +2,16 @@ package net.vertexgraphics.my3dart
 
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
+
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.rememberTransformableState
+import androidx.compose.foundation.gestures.transformable
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,11 +21,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
+
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -59,10 +66,19 @@ fun MainScreen() {
         else -> {currentImage = 0
             R.drawable.logo}
     }
+    val context = LocalContext.current
     Column(modifier = Modifier
         .padding(16.dp)
         .wrapContentSize(align = Alignment.Center)
-        ) {
+        )
+    {
+        var scale by remember {mutableStateOf(1f)}
+        var rotation by remember { mutableStateOf(0f)}
+        var offset by remember { mutableStateOf(Offset.Zero)}
+        val state = rememberTransformableState{zoomChange, offsetChange, rotationChange ->
+            scale *= zoomChange
+            rotation += rotationChange
+            offset += offsetChange}
         Surface(modifier= Modifier
             .padding(0.dp)
             .shadow(
@@ -76,7 +92,21 @@ fun MainScreen() {
             Image(painter = painterResource(id = image), contentDescription = image.toString(),
                 modifier = Modifier
                     .size(400.dp)
-                    .padding(20.dp))
+                    .padding(20.dp)
+                    .graphicsLayer(scaleX = scale, scaleY = scale, rotationZ = rotation,
+                    translationX = offset.x, translationY = offset.y)
+                    .transformable(state = state)
+                    .pointerInput(Unit) {
+                        detectTapGestures(onTap = {
+                            Toast
+                                .makeText(context, context.resources.getString(R.string.image_reset), Toast.LENGTH_SHORT)
+                                .show()
+                                scale = 1f
+                                rotation = 0f
+                                offset = Offset.Zero
+                        })
+                    })
+
         }
         Spacer(modifier = Modifier.height(16.dp))
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()){
@@ -92,7 +122,8 @@ fun MainScreen() {
 
 @Composable
 fun ImageFlipButton(@StringRes label: Int, value: Int, onClick: (Int)->Unit){
-    Button(onClick = { onClick(value) }, modifier = Modifier.width(120.dp),
+
+    Button(onClick = { onClick(value)}, modifier = Modifier.width(120.dp),
         colors = ButtonDefaults.buttonColors( backgroundColor =
         Color(LocalContext.current.resources.getColor(R.color.green, LocalContext.current.theme)))) {
         Text(text = stringResource(id = label))
