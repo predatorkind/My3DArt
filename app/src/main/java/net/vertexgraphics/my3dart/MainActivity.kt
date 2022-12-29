@@ -8,46 +8,47 @@ import androidx.activity.compose.setContent
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
-
 import androidx.compose.ui.graphics.Color
-
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
-
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import net.vertexgraphics.my3dart.ui.theme.My3DArtTheme
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 
+@ExperimentalMaterial3WindowSizeClassApi
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            My3DArtTheme {
+            val windowSizeClass = calculateWindowSizeClass(this)
+
+            My3DArtTheme() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = Color(resources.getColor(R.color.green_500, theme))
                 ) {
-                    MainScreen()
+                    MainScreen(windowSizeClass)
                 }
             }
         }
@@ -55,7 +56,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen() {
+fun MainScreen(windowSizeClass: WindowSizeClass) {
     var currentImage by remember { mutableStateOf(1)}
 
     val image = when(currentImage) {
@@ -131,10 +132,10 @@ fun ImageFlipButton(@StringRes label: Int, value: Int, onClick: (Int)->Unit){
 }
 
 
-@Preview(showBackground = false)
-@Composable
-fun DefaultPreview() {
-    My3DArtTheme {
-        MainScreen()
-    }
-}
+//@Preview(showBackground = false)
+//@Composable
+//fun DefaultPreview() {
+//    My3DArtTheme {
+//        MainScreen()
+//    }
+//}
