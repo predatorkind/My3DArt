@@ -1,6 +1,7 @@
 package net.vertexgraphics.my3dart
 
 
+import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -8,6 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.gestures.TransformableState
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
@@ -49,6 +51,7 @@ class MainActivity : ComponentActivity() {
                     color = Color(resources.getColor(R.color.green_500, theme))
                 ) {
                     MainScreen(windowSizeClass)
+                    //TODO make use of widnowsizeclass
                 }
             }
         }
@@ -68,9 +71,9 @@ fun MainScreen(windowSizeClass: WindowSizeClass) {
             R.drawable.logo}
     }
     val context = LocalContext.current
-    Column(modifier = Modifier
+    BoxWithConstraints(modifier = Modifier
         .padding(16.dp)
-        .wrapContentSize(align = Alignment.Center)
+        .wrapContentSize(align = Alignment.Center, false)
         )
     {
         var scale by remember {mutableStateOf(1f)}
@@ -80,39 +83,56 @@ fun MainScreen(windowSizeClass: WindowSizeClass) {
             scale *= zoomChange
             rotation += rotationChange
             offset += offsetChange}
-        Surface(modifier= Modifier
-            .padding(0.dp)
-            .shadow(
-                10.dp, RoundedCornerShape(5.dp), false, Color.Black,
-                spotColor = Color.Black
-            ),
-            shape = RoundedCornerShape(5.dp),
-            border = BorderStroke(1.dp, Color.Black),
+        if (maxHeight < 480.dp) {
+            Row() {
+                ImageSurface(
+                    context = context,
+                    scale = scale,
+                    rotation = rotation,
+                    offset = offset,
+                    state = state,
+                    image = image,
+                    widthFraction = 0.8f,
+                    heightFraction = 1f,
+                    reset = { zoomChange, rotationChange, offsetChange ->
+                        scale = zoomChange
+                        rotation = rotationChange
+                        offset = offsetChange  }
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                Column() {
+                    ImageFlipButton(label = R.string.previous, value = currentImage, onClick = { if (currentImage > 1) currentImage--})
+                    ImageFlipButton(label = R.string.next, value = currentImage, onClick = { currentImage++})
+                }
+            }
 
-            color = Color(LocalContext.current.resources.getColor(R.color.green, LocalContext.current.theme))){
-            Image(painter = painterResource(id = image), contentDescription = image.toString(),
-                modifier = Modifier
-                    .size(400.dp)
-                    .padding(20.dp)
-                    .graphicsLayer(scaleX = scale, scaleY = scale, rotationZ = rotation,
-                    translationX = offset.x, translationY = offset.y)
-                    .transformable(state = state)
-                    .pointerInput(Unit) {
-                        detectTapGestures(onTap = {
-                            Toast
-                                .makeText(context, context.resources.getString(R.string.image_reset), Toast.LENGTH_SHORT)
-                                .show()
-                                scale = 1f
-                                rotation = 0f
-                                offset = Offset.Zero
-                        })
-                    })
 
+        } else {
+            Column {
+                ImageSurface(
+                    context = context,
+                    scale = scale,
+                    rotation = rotation,
+                    offset = offset,
+                    state = state,
+                    image = image,
+                    widthFraction = 1f,
+                    heightFraction = 0.8f,
+                    reset = { zoomChange, rotationChange, offsetChange ->
+                        scale = zoomChange
+                        rotation = rotationChange
+                        offset = offsetChange
+                    }
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()){
+                    ImageFlipButton(label = R.string.previous, value = currentImage, onClick = { if (currentImage > 1) currentImage--})
+                    ImageFlipButton(label = R.string.next, value = currentImage, onClick = { currentImage++})
+            }
         }
-        Spacer(modifier = Modifier.height(16.dp))
-        Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()){
-            ImageFlipButton(label = R.string.previous, value = currentImage, onClick = { if (currentImage > 1) currentImage--})
-            ImageFlipButton(label = R.string.next, value = currentImage, onClick = { currentImage++})
+
+
+
         }
     }
     
@@ -120,6 +140,45 @@ fun MainScreen(windowSizeClass: WindowSizeClass) {
     
 }
 
+@Composable
+fun ImageSurface(context: Context, scale: Float, rotation: Float, offset: Offset,
+                 state: TransformableState, image: Int, widthFraction: Float,
+                 heightFraction: Float, reset: (Float, Float, Offset) -> Unit) {
+    Surface(modifier= Modifier
+        .padding(0.dp)
+        .shadow(
+            10.dp, RoundedCornerShape(5.dp), false, Color.Black,
+            spotColor = Color.Black
+        ),
+        shape = RoundedCornerShape(5.dp),
+        border = BorderStroke(1.dp, Color.Black),
+
+        color = Color(LocalContext.current.resources.getColor(R.color.green, LocalContext.current.theme))){
+        Image(painter = painterResource(id = image), contentDescription = image.toString(),
+            modifier = Modifier
+                .fillMaxWidth(widthFraction)
+                .fillMaxHeight(heightFraction)
+                .padding(20.dp)
+                .graphicsLayer(
+                    scaleX = scale, scaleY = scale, rotationZ = rotation,
+                    translationX = offset.x, translationY = offset.y
+                )
+                .transformable(state = state)
+                .pointerInput(Unit) {
+                    detectTapGestures(onTap = {
+                        Toast
+                            .makeText(
+                                context,
+                                context.resources.getString(R.string.image_reset),
+                                Toast.LENGTH_SHORT
+                            )
+                            .show()
+                        reset(1f, 0f, Offset.Zero)
+                    })
+                })
+
+    }
+}
 
 @Composable
 fun ImageFlipButton(@StringRes label: Int, value: Int, onClick: (Int)->Unit){
