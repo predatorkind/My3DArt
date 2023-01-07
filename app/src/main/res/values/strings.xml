@@ -3,4 +3,9 @@
     <string name="previous">Previous</string>
     <string name="next">Next</string>
     <string name="image_reset">Image Reset</string>
+    <string name="Desert_Eagle">Desert Eagle</string>
+    <string name="AKM">AKM</string>
+    <string name="kitchen">Kitchen</string>
+    <string name="robot">Robot</string>
+    <string name="logo">Logo</string>
 </resources>

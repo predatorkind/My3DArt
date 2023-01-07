@@ -14,11 +14,11 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
+
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,6 +36,10 @@ import net.vertexgraphics.my3dart.ui.theme.My3DArtTheme
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+import androidx.compose.ui.layout.ContentScale
+import net.vertexgraphics.my3dart.data.Datasource
+
+import net.vertexgraphics.my3dart.model.ArtElement
 
 @ExperimentalMaterial3WindowSizeClassApi
 class MainActivity : ComponentActivity() {
@@ -50,8 +54,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = Color(resources.getColor(R.color.green_500, theme))
                 ) {
-                    MainScreen(windowSizeClass)
+                    // MainScreen(windowSizeClass)
                     //TODO make use of widnowsizeclass
+                    ArtList(artElementList = Datasource().loadImageData())
                 }
             }
         }
@@ -190,7 +195,39 @@ fun ImageFlipButton(@StringRes label: Int, value: Int, onClick: (Int)->Unit){
     }
 }
 
+@Composable
+private  fun ArtList(artElementList: List<ArtElement>, modifier: Modifier = Modifier) {
+    LazyColumn() {
+        items(artElementList){  artElement -> ArtCard(artElement)
 
+        }
+    }
+}
+
+@Composable
+fun ArtCard(artElement: ArtElement, modifier: Modifier = Modifier){
+    Card(modifier = Modifier.padding(8.dp), elevation = 4.dp) {
+        Column {
+            Image(painter = painterResource(id = artElement.imageResourceId),
+                contentDescription = stringResource(id = artElement.stringResourceId),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(194.dp), contentScale = ContentScale.Crop)
+            Text(text = stringResource(id = artElement.stringResourceId),
+                modifier = Modifier.padding(16.dp),
+                style = MaterialTheme.typography.h6
+            )
+        }
+
+    }
+
+}
+
+@Preview
+@Composable
+private fun ArtCardPreview() {
+    ArtCard(artElement = ArtElement(R.string.Desert_Eagle, R.drawable.de))
+}
 //@Preview(showBackground = false)
 //@Composable
 //fun DefaultPreview() {
