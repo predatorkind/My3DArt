@@ -15,6 +15,9 @@ import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -50,14 +53,9 @@ class MainActivity : ComponentActivity() {
 
             My3DArtTheme() {
                 // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = Color(resources.getColor(R.color.green_500, theme))
-                ) {
-                    // MainScreen(windowSizeClass)
-                    //TODO make use of widnowsizeclass
-                    ArtList(artElementList = Datasource().loadImageData())
-                }
+                Scaffold(
+                    topBar = {TopBar()}
+                ) { ArtList(artElementList = Datasource().loadImageData(), modifier = Modifier.padding(it)) }
             }
         }
     }
@@ -196,9 +194,15 @@ fun ImageFlipButton(@StringRes label: Int, value: Int, onClick: (Int)->Unit){
 }
 
 @Composable
+private fun TopBar(){
+
+}
+
+@Composable
 private  fun ArtList(artElementList: List<ArtElement>, modifier: Modifier = Modifier) {
-    LazyColumn() {
-        items(artElementList){  artElement -> ArtCard(artElement)
+    LazyVerticalGrid(columns = GridCells.Adaptive(minSize = 150.dp)) {
+        items(items = artElementList) { artElement -> ArtCard(artElement = artElement)
+        //items(artElementList){  artElement -> ArtCard(artElement)
 
         }
     }
@@ -215,6 +219,7 @@ fun ArtCard(artElement: ArtElement, modifier: Modifier = Modifier){
                 .height(194.dp), contentScale = ContentScale.Crop)
             Text(text = stringResource(id = artElement.stringResourceId),
                 modifier = Modifier.padding(16.dp),
+                color = MaterialTheme.colors.onSurface,
                 style = MaterialTheme.typography.h6
             )
         }
