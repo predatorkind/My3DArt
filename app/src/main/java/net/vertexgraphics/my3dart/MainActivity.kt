@@ -9,6 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.TransformableState
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.rememberTransformableState
@@ -21,6 +22,8 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -40,6 +43,8 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.text.style.TextOverflow
 import net.vertexgraphics.my3dart.data.Datasource
 
 import net.vertexgraphics.my3dart.model.ArtElement
@@ -51,13 +56,18 @@ class MainActivity : ComponentActivity() {
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
 
-            My3DArtTheme() {
-                // A surface container using the 'background' color from the theme
-                Scaffold(
-                    topBar = {TopBar()}
-                ) { ArtList(artElementList = Datasource().loadImageData(), modifier = Modifier.padding(it)) }
+            My3DArtTheme {
+
+                AppScreen()
             }
         }
+    }
+}
+
+@Composable
+fun AppScreen(){
+    Scaffold(topBar = { TopBar()}) {
+        ArtList(artElementList = Datasource().loadImageData(), modifier = Modifier.padding(it))
     }
 }
 
@@ -194,7 +204,23 @@ fun ImageFlipButton(@StringRes label: Int, value: Int, onClick: (Int)->Unit){
 }
 
 @Composable
-private fun TopBar(){
+private fun TopBar(modifier: Modifier = Modifier){
+    Surface(modifier = modifier){
+        Row(modifier = modifier
+            .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Image(modifier = modifier
+                .size(64.dp)
+                .padding(8.dp),
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = null)
+            Text(
+                text = stringResource(id = R.string.app_name),
+                style = MaterialTheme.typography.h1
+            )
+        }
+    }
 
 }
 
@@ -210,22 +236,78 @@ private  fun ArtList(artElementList: List<ArtElement>, modifier: Modifier = Modi
 
 @Composable
 fun ArtCard(artElement: ArtElement, modifier: Modifier = Modifier){
-    Card(modifier = Modifier.padding(8.dp), elevation = 4.dp) {
+    var fontSizeMultiplier by remember {mutableStateOf(1f)}
+    var expanded by remember { mutableStateOf(false)}
+    Card(modifier = modifier.padding(8.dp), elevation = 4.dp) {
         Column {
             Image(painter = painterResource(id = artElement.imageResourceId),
                 contentDescription = stringResource(id = artElement.stringResourceId),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(194.dp), contentScale = ContentScale.Crop)
-            Text(text = stringResource(id = artElement.stringResourceId),
-                modifier = Modifier.padding(16.dp),
-                color = MaterialTheme.colors.onSurface,
-                style = MaterialTheme.typography.h6
-            )
+                .height(150.dp), contentScale = ContentScale.Crop)
+            Row (
+                modifier = Modifier.fillMaxWidth().height(60.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+                    ) {
+                Text(text = stringResource(id = artElement.stringResourceId),
+                    modifier = Modifier.padding(16.dp).fillMaxWidth(0.7f),
+                    color = MaterialTheme.colors.onSurface,
+                    style = MaterialTheme.typography.h6.copy(fontSize = MaterialTheme.typography.h6.fontSize * fontSizeMultiplier),
+                    maxLines = 1,
+                    overflow = TextOverflow.Visible,
+                    onTextLayout = {
+                        if (it.hasVisualOverflow) {
+                            fontSizeMultiplier *= 0.95f // you can tune this constant
+                        }
+                    }
+                )
+                ArtCardButton(expanded = expanded, onClick = { /*TODO*/ }, modifier = Modifier.fillMaxWidth())
+            }
+            
         }
 
     }
 
+}
+
+@Composable
+private fun ArtCardDetails(@StringRes details: Int, modifier: Modifier ){
+    //TODO
+}
+
+@Composable
+private fun ArtCardButton(
+    expanded: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    IconButton(
+        //modifier = modifier.width(32.dp),
+        onClick = onClick) {
+        Icon(
+            painter = painterResource(id = R.drawable.expand_more),
+            tint = MaterialTheme.colors.onSurface,
+            contentDescription = stringResource(id = R.string.expand_button_content_description)
+        )
+    }
+}
+
+
+@Preview
+@Composable
+private fun DarkThemePreview() {
+    My3DArtTheme(darkTheme = true) {
+        AppScreen()
+    }
+}
+
+@Preview
+@Composable
+private fun LightThemePreview() {
+    My3DArtTheme(darkTheme = false) {
+        AppScreen()
+    }
 }
 
 @Preview
