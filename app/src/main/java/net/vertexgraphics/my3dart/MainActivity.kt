@@ -8,6 +8,10 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.StringRes
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -47,6 +51,7 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.modifier.modifierLocalConsumer
+
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextOverflow
 import net.vertexgraphics.my3dart.data.Datasource
@@ -242,8 +247,13 @@ private  fun ArtList(artElementList: List<ArtElement>, modifier: Modifier = Modi
 fun ArtCard(artElement: ArtElement, modifier: Modifier = Modifier){
     var fontSizeMultiplier by remember {mutableStateOf(1f)}
     var expanded by remember { mutableStateOf(false)}
+    val col by animateColorAsState(targetValue = if (expanded) MaterialTheme.colors.secondary else MaterialTheme.colors.surface) {
+
+    }
     Card(modifier = modifier.padding(8.dp), elevation = 4.dp) {
-        Column {
+        Column (modifier = Modifier.animateContentSize(
+            animationSpec = spring(dampingRatio = Spring.DampingRatioNoBouncy,
+            stiffness = Spring.StiffnessMedium)).background(color = col)) {
             Image(painter = painterResource(id = artElement.imageResourceId),
                 contentDescription = stringResource(id = artElement.stringResourceId),
             modifier = Modifier
