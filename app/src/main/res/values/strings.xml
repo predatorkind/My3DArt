@@ -9,4 +9,9 @@
     <string name="robot">Robot</string>
     <string name="logo">Logo</string>
     <string name="expand_button_content_description">Expand to see details</string>
+    <string name="DE_desc">3D model of Desert Eagle rendered in Cycles render engine.</string>
+    <string name="AKM_desc">3D model of AKM rendered using Freestyle in Blender.</string>
+    <string name="Kitchen_desc">3D model of a kitchen rendered with Cycles.</string>
+    <string name="Robot_desc">3D model of a robot character from project Robot.\n</string>
+    <string name="Logo_desc">Predatorkind Logo.\n</string>
 </resources>

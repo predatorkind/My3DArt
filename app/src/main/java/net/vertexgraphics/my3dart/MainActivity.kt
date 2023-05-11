@@ -1,6 +1,7 @@
 package net.vertexgraphics.my3dart
 
 
+import android.content.ClipDescription
 import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
@@ -23,6 +24,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 
 
 import androidx.compose.runtime.*
@@ -44,6 +47,7 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextOverflow
 import net.vertexgraphics.my3dart.data.Datasource
 
@@ -246,12 +250,16 @@ fun ArtCard(artElement: ArtElement, modifier: Modifier = Modifier){
                 .fillMaxWidth()
                 .height(150.dp), contentScale = ContentScale.Crop)
             Row (
-                modifier = Modifier.fillMaxWidth().height(60.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
                     ) {
                 Text(text = stringResource(id = artElement.stringResourceId),
-                    modifier = Modifier.padding(16.dp).fillMaxWidth(0.7f),
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth(0.7f),
                     color = MaterialTheme.colors.onSurface,
                     style = MaterialTheme.typography.h6.copy(fontSize = MaterialTheme.typography.h6.fontSize * fontSizeMultiplier),
                     maxLines = 1,
@@ -262,9 +270,18 @@ fun ArtCard(artElement: ArtElement, modifier: Modifier = Modifier){
                         }
                     }
                 )
-                ArtCardButton(expanded = expanded, onClick = { /*TODO*/ }, modifier = Modifier.fillMaxWidth())
+                ArtCardButton(expanded = expanded, onClick = { expanded = !expanded }, modifier = Modifier.fillMaxWidth())
             }
-            
+            if (expanded) {
+                ArtCardDetails(
+                    details = artElement.descResourceId, modifier = Modifier.padding(
+                        start = dimensionResource(id = R.dimen.padding_medium),
+                        end = dimensionResource(id = R.dimen.padding_medium),
+                        top = dimensionResource(id = R.dimen.padding_small),
+                        bottom = dimensionResource(id = R.dimen.padding_medium)
+                    )
+                )
+            }
         }
 
     }
@@ -273,7 +290,12 @@ fun ArtCard(artElement: ArtElement, modifier: Modifier = Modifier){
 
 @Composable
 private fun ArtCardDetails(@StringRes details: Int, modifier: Modifier ){
-    //TODO
+    Column(
+        modifier = modifier
+    ){
+        Text(text = stringResource(id = details),
+            style = MaterialTheme.typography.body1)
+    }
 }
 
 @Composable
@@ -283,10 +305,11 @@ private fun ArtCardButton(
     modifier: Modifier = Modifier,
 ) {
     IconButton(
-        //modifier = modifier.width(32.dp),
+        modifier = modifier.width(32.dp),
         onClick = onClick) {
         Icon(
-            painter = painterResource(id = R.drawable.expand_more),
+            imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore ,
+            //painter = painterResource(id = R.drawable.expand_more),
             tint = MaterialTheme.colors.onSurface,
             contentDescription = stringResource(id = R.string.expand_button_content_description)
         )
@@ -313,7 +336,7 @@ private fun LightThemePreview() {
 @Preview
 @Composable
 private fun ArtCardPreview() {
-    ArtCard(artElement = ArtElement(R.string.Desert_Eagle, R.drawable.de))
+    ArtCard(artElement = ArtElement(R.string.Desert_Eagle, R.string.DE_desc, R.drawable.de))
 }
 //@Preview(showBackground = false)
 //@Composable
