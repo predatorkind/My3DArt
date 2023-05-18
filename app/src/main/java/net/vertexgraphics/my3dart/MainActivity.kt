@@ -4,6 +4,8 @@ package net.vertexgraphics.my3dart
 import android.content.ClipDescription
 import android.content.Context
 import android.os.Bundle
+import android.provider.Settings.Global.getString
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -49,6 +51,7 @@ import net.vertexgraphics.my3dart.ui.theme.My3DArtTheme
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.modifier.modifierLocalConsumer
 
@@ -58,8 +61,10 @@ import net.vertexgraphics.my3dart.data.Datasource
 
 import net.vertexgraphics.my3dart.model.ArtElement
 
+private const val TAG = "MainActivity"
 @ExperimentalMaterial3WindowSizeClassApi
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -70,11 +75,40 @@ class MainActivity : ComponentActivity() {
                 AppScreen()
             }
         }
+        Log.d(TAG, "onCreate Called")
     }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(TAG, "onStart Called")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(TAG, "onStop Called")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG, "onResume Called")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d(TAG, "onPause Called")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "onDestroy Called")
+    }
+
 }
 
 @Composable
 fun AppScreen(){
+    var currentTaps by remember { mutableStateOf(0)}
+    var lifetimeTaps by rememberSaveable { mutableStateOf(0)}
     Scaffold(topBar = { TopBar()}) {
         ArtList(artElementList = Datasource().loadImageData(), modifier = Modifier.padding(it))
     }
@@ -82,6 +116,7 @@ fun AppScreen(){
 
 @Composable
 fun MainScreen(windowSizeClass: WindowSizeClass) {
+
     var currentImage by remember { mutableStateOf(1)}
 
     val image = when(currentImage) {
@@ -212,9 +247,18 @@ fun ImageFlipButton(@StringRes label: Int, value: Int, onClick: (Int)->Unit){
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun TopBar(modifier: Modifier = Modifier){
-    Surface(modifier = modifier){
+    var currentTaps by remember { mutableStateOf(0)}
+    var lifetimeTaps by rememberSaveable { mutableStateOf(0)}
+
+    Surface(onClick = {
+        currentTaps += 1
+        lifetimeTaps += 1
+
+    },
+        modifier = modifier){
         Row(modifier = modifier
             .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -228,6 +272,14 @@ private fun TopBar(modifier: Modifier = Modifier){
                 text = stringResource(id = R.string.app_name),
                 style = MaterialTheme.typography.h1
             )
+            Spacer(modifier = Modifier
+                .weight(1f)
+                )
+            Text (
+                text = stringResource(R.string.tapCounter, currentTaps, lifetimeTaps),
+                style = MaterialTheme.typography.h1,
+                modifier = Modifier.padding(end = dimensionResource(id = R.dimen.padding_medium))
+                    )
         }
     }
 
@@ -251,9 +303,14 @@ fun ArtCard(artElement: ArtElement, modifier: Modifier = Modifier){
 
     }
     Card(modifier = modifier.padding(8.dp), elevation = 4.dp) {
-        Column (modifier = Modifier.animateContentSize(
-            animationSpec = spring(dampingRatio = Spring.DampingRatioNoBouncy,
-            stiffness = Spring.StiffnessMedium)).background(color = col)) {
+        Column (modifier = Modifier
+            .animateContentSize(
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioNoBouncy,
+                    stiffness = Spring.StiffnessMedium
+                )
+            )
+            .background(color = col)) {
             Image(painter = painterResource(id = artElement.imageResourceId),
                 contentDescription = stringResource(id = artElement.stringResourceId),
             modifier = Modifier

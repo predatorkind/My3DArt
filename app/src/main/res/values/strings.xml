@@ -14,4 +14,5 @@
     <string name="Kitchen_desc">3D model of a kitchen rendered with Cycles.</string>
     <string name="Robot_desc">3D model of a robot character from project Robot.\n</string>
     <string name="Logo_desc">Predatorkind Logo.\n</string>
+    <string name="tapCounter">Taps: %1$d / %2$d</string>
 </resources>
