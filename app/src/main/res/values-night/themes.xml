@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.My3DArt" parent= "android:style/Theme.Material.NoActionBar">
+    <style name="Theme.MyPortfolioApp" parent= "android:style/Theme.Material.NoActionBar">
         <item name="android:statusBarColor">@color/green_500</item>
     </style>
 </resources>

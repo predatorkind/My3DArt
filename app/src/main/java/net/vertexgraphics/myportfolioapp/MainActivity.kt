@@ -43,7 +43,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import net.vertexgraphics.myportfolioapp.ui.theme.My3DArtTheme
+import net.vertexgraphics.myportfolioapp.ui.theme.MyPortfolioAppTheme
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
 
-            My3DArtTheme {
+            MyPortfolioAppTheme {
 
                 //AppScreen()
                 GameScreen()
@@ -384,7 +384,7 @@ private fun ArtCardButton(
 @Preview
 @Composable
 private fun DarkThemePreview() {
-    My3DArtTheme(darkTheme = true) {
+    MyPortfolioAppTheme(darkTheme = true) {
         AppScreen()
     }
 }
@@ -392,7 +392,7 @@ private fun DarkThemePreview() {
 @Preview
 @Composable
 private fun LightThemePreview() {
-    My3DArtTheme(darkTheme = false) {
+    MyPortfolioAppTheme(darkTheme = false) {
         AppScreen()
     }
 }
