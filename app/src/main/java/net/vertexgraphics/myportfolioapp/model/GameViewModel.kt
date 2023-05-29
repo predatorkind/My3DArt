@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.flow.update
+import net.vertexgraphics.myportfolioapp.data.MAX_WORDS
 import net.vertexgraphics.myportfolioapp.data.SCORE_INCREMENT
 
 
@@ -66,14 +67,32 @@ class GameViewModel: ViewModel() {
     }
 
     private fun updateGameState(updatedScore: Int) {
-        _uiState.update {
-                currentState -> currentState.copy(
-                    isGuessedWordWrong = false,
-                    currentScrambledWord = pickRandomWordAndShuffle(),
-                    score = updatedScore,
-                    currentWordCount = currentState.currentWordCount.inc(),
-                )
+        if (usedWords.size == MAX_WORDS) {
+            // Last round in the game, update is GameOver to true
+            _uiState.update {
+                    currentState -> currentState.copy(
+                        isGuessedWordWrong = false,
+                        score = updatedScore,
+                        isGameOver = true,
+                    )
+            }
+        } else {
+            // Normal round in the game
+            _uiState.update {
+                    currentState -> currentState.copy(
+                        isGuessedWordWrong = false,
+                        currentScrambledWord = pickRandomWordAndShuffle(),
+                        score = updatedScore,
+                        currentWordCount = currentState.currentWordCount.inc(),
+                    )
+            }
         }
+
+    }
+
+    fun skipWord() {
+        updateGameState(_uiState.value.score)
+        updateUserGuess("")
     }
 
     init {
