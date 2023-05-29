@@ -23,6 +23,8 @@ class GameViewModelTest {
 
         currentGameUiState = viewModel.uiState.value
 
+        // assert that after a correct answer the score changes
+        // and isGuessedWordWrong flag is not triggered
         assertFalse(currentGameUiState.isGuessedWordWrong)
         assertEquals(10, currentGameUiState.score)
     }
@@ -34,6 +36,9 @@ class GameViewModelTest {
         viewModel.checkUserGuess()
 
         val currentGameUiState = viewModel.uiState.value
+
+        // assert that after wrong answer the score does not change
+        // and isGuessedWordWrong flag is triggered
         assertEquals(0, currentGameUiState.score)
         assertTrue(currentGameUiState.isGuessedWordWrong)
     }
@@ -43,6 +48,7 @@ class GameViewModelTest {
         val gameUiState = viewModel.uiState.value
         val unScrambledWord = getUnscrambledWord(gameUiState.currentScrambledWord)
 
+        // assert that after initialization ui state is reset
         assertNotEquals(unScrambledWord, gameUiState.currentScrambledWord)
         assertTrue(gameUiState.currentWordCount == 1)
         assertTrue(gameUiState.score == 0)
@@ -74,5 +80,25 @@ class GameViewModelTest {
 
 
 
+    }
+
+    @Test
+    fun gameViewModel_WordSkipped_ScoreUnchangedWordCountIncreased() {
+        var currentGameUiState = viewModel.uiState.value
+        val correctPlayerWord = getUnscrambledWord(currentGameUiState.currentScrambledWord)
+        viewModel.updateUserGuess(correctPlayerWord)
+        viewModel.checkUserGuess()
+
+        currentGameUiState = viewModel.uiState.value
+        val lastWordCount = currentGameUiState.currentWordCount
+        val lastScore = currentGameUiState.score
+        viewModel.skipWord()
+        currentGameUiState = viewModel.uiState.value
+
+        // assert that score remains unchanged after word is skipped
+        assertEquals(lastScore, currentGameUiState.score)
+
+        // assert that word count is increased by 1 after word is skipped
+        assertEquals(lastWordCount + 1, currentGameUiState.currentWordCount)
     }
 }
