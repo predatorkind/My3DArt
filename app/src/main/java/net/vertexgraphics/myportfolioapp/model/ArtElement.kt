@@ -1,4 +1,4 @@
-package net.vertexgraphics.my3dart.model
+package net.vertexgraphics.myportfolioapp.model
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes

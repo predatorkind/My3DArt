@@ -15,4 +15,16 @@
     <string name="Robot_desc">3D model of a robot character from project Robot.\n</string>
     <string name="Logo_desc">Predatorkind Logo.\n</string>
     <string name="tapCounter">Taps: %1$d / %2$d</string>
+    <string name="unscramble">Unscramble</string>
+    <string name="submit">Submit</string>
+    <string name="skip">Skip</string>
+    <string name="score">Score\n %d</string>
+    <string name="word_count">%d/10</string>
+    <string name="instructions">Instructions</string>
+    <string name="enter_your_word">Enter your word</string>
+    <string name="congratulations">Congratulations!</string>
+    <string name="you_scored">You scored</string>
+    <string name="exit">Exit</string>
+    <string name="play_again">Play again?</string>
+    <string name="wrong_guess">Wrong Guess!</string>
 </resources>

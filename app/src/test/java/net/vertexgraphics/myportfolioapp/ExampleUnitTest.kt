@@ -1,4 +1,4 @@
-package net.vertexgraphics.my3dart
+package net.vertexgraphics.myportfolioapp
 
 import org.junit.Test
 

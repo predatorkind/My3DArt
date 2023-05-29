@@ -1,4 +1,4 @@
-package net.vertexgraphics.my3dart.ui.theme
+package net.vertexgraphics.myportfolioapp.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

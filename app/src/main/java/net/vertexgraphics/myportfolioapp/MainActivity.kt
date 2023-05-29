@@ -1,10 +1,8 @@
-package net.vertexgraphics.my3dart
+package net.vertexgraphics.myportfolioapp
 
 
-import android.content.ClipDescription
 import android.content.Context
 import android.os.Bundle
-import android.provider.Settings.Global.getString
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -22,11 +20,9 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -47,19 +43,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import net.vertexgraphics.my3dart.ui.theme.My3DArtTheme
+import net.vertexgraphics.myportfolioapp.ui.theme.My3DArtTheme
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
 
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextOverflow
-import net.vertexgraphics.my3dart.data.Datasource
+import net.vertexgraphics.myportfolioapp.data.Datasource
 
-import net.vertexgraphics.my3dart.model.ArtElement
+import net.vertexgraphics.myportfolioapp.model.ArtElement
+import net.vertexgraphics.myportfolioapp.ui.GameScreen
 
 private const val TAG = "MainActivity"
 @ExperimentalMaterial3WindowSizeClassApi
@@ -72,7 +68,8 @@ class MainActivity : ComponentActivity() {
 
             My3DArtTheme {
 
-                AppScreen()
+                //AppScreen()
+                GameScreen()
             }
         }
         Log.d(TAG, "onCreate Called")

@@ -1,7 +1,7 @@
-package net.vertexgraphics.my3dart.data
+package net.vertexgraphics.myportfolioapp.data
 
-import net.vertexgraphics.my3dart.R
-import net.vertexgraphics.my3dart.model.ArtElement
+import net.vertexgraphics.myportfolioapp.R
+import net.vertexgraphics.myportfolioapp.model.ArtElement
 
 class Datasource {
     fun loadImageData(): List<ArtElement> {
