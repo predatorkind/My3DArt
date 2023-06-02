@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +26,7 @@ class GalleryViewModel: ViewModel() {
     var lifetimeTaps by mutableStateOf(0)
 
     // ArtElement list
-    val _artElementList = mutableStateListOf<ArtElement>()
+    private var _artElementList = mutableStateListOf<ArtElement>()
     val artElementList: List<ArtElement> = _artElementList
 
 
@@ -34,6 +35,7 @@ class GalleryViewModel: ViewModel() {
 
     init {
         _artElementList.addAll(Datasource().loadImageData())
+        Log.d(TAG, "Initializing")
     }
 
 
@@ -45,7 +47,9 @@ class GalleryViewModel: ViewModel() {
          */
 
         val indx = _artElementList.indexOf(artElement)
+
         _artElementList[indx].isExpanded = !_artElementList[indx].isExpanded
+
 
         Log.d(TAG, "setExpandedState: ${artElement.isExpanded} index: ${indx}")
     }

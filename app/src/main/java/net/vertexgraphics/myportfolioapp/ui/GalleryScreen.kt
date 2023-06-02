@@ -29,7 +29,9 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
@@ -157,18 +159,23 @@ fun MainScreen(windowSizeClass: WindowSizeClass) {
 }
 
 @Composable
-fun AppScreen(galleryViewModel: GalleryViewModel = viewModel()){
+fun GalleryScreen(galleryViewModel: GalleryViewModel = viewModel(), modifier: Modifier){
+    //val galleryViewModel = GalleryViewModel()
     val galleryUiState = galleryViewModel.uiState
-
-
-    Scaffold(topBar = { TopBar(
-        lifetimeTaps = galleryViewModel.lifetimeTaps,
-        increaseLifetimeTaps = { galleryViewModel.increaseLifetimeTaps()} ,
-        )}) {
-        ArtList(galleryViewModel = galleryViewModel, modifier = Modifier.padding(it))
-    }
+//    Column (
+//        modifier = Modifier
+//            .verticalScroll(rememberScrollState())
+//            .padding(all = dimensionResource(id = R.dimen.padding_medium)),
+//        verticalArrangement = Arrangement.Center,
+//        horizontalAlignment = Alignment.CenterHorizontally
+//    ) {
+//        ArtList(galleryViewModel = galleryViewModel)
+//    }
+    ArtList(
+        artElementList = galleryViewModel.artElementList,
+        toggleArtElementExpanded = {element -> galleryViewModel.toggleArtElementExpanded(element)},
+        )
 }
-
 @Composable
 fun ImageSurface(context: Context, scale: Float, rotation: Float, offset: Offset,
                  state: TransformableState, image: Int, widthFraction: Float,
@@ -221,51 +228,11 @@ fun ImageFlipButton(@StringRes label: Int, value: Int, onClick: (Int)->Unit){
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-private fun TopBar(modifier: Modifier = Modifier, lifetimeTaps: Int, increaseLifetimeTaps: () -> Unit){
-    // save the currentTaps variable between recompositions
-    // lifetimeTaps is saved in the GalleryViewModel
-    var currentTaps by remember { mutableStateOf(0) }
-
-
-    Surface(onClick = {
-        currentTaps += 1
-
-        increaseLifetimeTaps()
-
-    },
-        modifier = modifier){
-        Row(modifier = modifier
-            .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ){
-            Image(modifier = modifier
-                .size(64.dp)
-                .padding(8.dp),
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = null)
-            Text(
-                text = stringResource(id = R.string.app_name),
-                style = MaterialTheme.typography.h1
-            )
-            Spacer(modifier = Modifier
-                .weight(1f)
-            )
-            Text (
-                text = stringResource(R.string.tapCounter, currentTaps, lifetimeTaps),
-                style = MaterialTheme.typography.h1,
-                modifier = Modifier.padding(end = dimensionResource(id = R.dimen.padding_medium))
-            )
-        }
-    }
-
-}
 
 @Composable
-private  fun ArtList(galleryViewModel: GalleryViewModel, modifier: Modifier = Modifier) {
+private  fun ArtList(artElementList: List<ArtElement>, toggleArtElementExpanded: (ArtElement) -> Unit, modifier: Modifier = Modifier) {
     LazyVerticalGrid(columns = GridCells.Adaptive(minSize = 150.dp)) {
-        items(items = galleryViewModel.artElementList) { artElement -> ArtCard(artElement = artElement, toggleExpanded = { galleryViewModel.toggleArtElementExpanded(artElement) }) }
+        items(items = artElementList) { artElement -> ArtCard(artElement = artElement, toggleExpanded = { toggleArtElementExpanded(artElement) }) }
             //items(artElementList){  artElement -> ArtCard(artElement)
 
 
@@ -368,7 +335,7 @@ private fun ArtCardButton(
 @Composable
 private fun DarkThemePreview() {
     MyPortfolioAppTheme(darkTheme = true) {
-        AppScreen()
+        //GalleryScreen(modifier = Modifier)
     }
 }
 
@@ -376,7 +343,7 @@ private fun DarkThemePreview() {
 @Composable
 private fun LightThemePreview() {
     MyPortfolioAppTheme(darkTheme = false) {
-        AppScreen()
+       // GalleryScreen(modifier = Modifier)
     }
 }
 
