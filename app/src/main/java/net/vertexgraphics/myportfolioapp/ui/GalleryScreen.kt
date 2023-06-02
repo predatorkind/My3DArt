@@ -48,7 +48,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
+
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,13 +67,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import net.vertexgraphics.myportfolioapp.R
-import net.vertexgraphics.myportfolioapp.data.Datasource
+
 import net.vertexgraphics.myportfolioapp.model.ArtElement
 import net.vertexgraphics.myportfolioapp.model.GalleryViewModel
 import net.vertexgraphics.myportfolioapp.ui.theme.MyPortfolioAppTheme
 
 @Composable
 fun MainScreen(windowSizeClass: WindowSizeClass) {
+    //TODO: reuse this composable for image detail screen
 
     var currentImage by remember { mutableStateOf(1) }
 
@@ -159,12 +160,12 @@ fun MainScreen(windowSizeClass: WindowSizeClass) {
 fun AppScreen(galleryViewModel: GalleryViewModel = viewModel()){
     val galleryUiState = galleryViewModel.uiState
 
-    //var lifetimeTaps by rememberSaveable { mutableStateOf(0)}
+
     Scaffold(topBar = { TopBar(
         lifetimeTaps = galleryViewModel.lifetimeTaps,
         increaseLifetimeTaps = { galleryViewModel.increaseLifetimeTaps()} ,
         )}) {
-        ArtList(artElementList = Datasource().loadImageData(), modifier = Modifier.padding(it))
+        ArtList(galleryViewModel = galleryViewModel, modifier = Modifier.padding(it))
     }
 }
 
@@ -223,6 +224,8 @@ fun ImageFlipButton(@StringRes label: Int, value: Int, onClick: (Int)->Unit){
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun TopBar(modifier: Modifier = Modifier, lifetimeTaps: Int, increaseLifetimeTaps: () -> Unit){
+    // save the currentTaps variable between recompositions
+    // lifetimeTaps is saved in the GalleryViewModel
     var currentTaps by remember { mutableStateOf(0) }
 
 
@@ -260,20 +263,23 @@ private fun TopBar(modifier: Modifier = Modifier, lifetimeTaps: Int, increaseLif
 }
 
 @Composable
-private  fun ArtList(artElementList: List<ArtElement>, modifier: Modifier = Modifier) {
+private  fun ArtList(galleryViewModel: GalleryViewModel, modifier: Modifier = Modifier) {
     LazyVerticalGrid(columns = GridCells.Adaptive(minSize = 150.dp)) {
-        items(items = artElementList) { artElement -> ArtCard(artElement = artElement)
+        items(items = galleryViewModel.artElementList) { artElement -> ArtCard(artElement = artElement, toggleExpanded = { galleryViewModel.toggleArtElementExpanded(artElement) }) }
             //items(artElementList){  artElement -> ArtCard(artElement)
 
-        }
+
     }
 }
 
 @Composable
-fun ArtCard(artElement: ArtElement, modifier: Modifier = Modifier){
+fun ArtCard(
+    artElement: ArtElement,
+    toggleExpanded: (ArtElement) -> Unit,
+    modifier: Modifier = Modifier){
     var fontSizeMultiplier by remember { mutableStateOf(1f) }
-    var expanded by remember { mutableStateOf(false) }
-    val col by animateColorAsState(targetValue = if (expanded) MaterialTheme.colors.secondary else MaterialTheme.colors.surface) {
+    //var expanded by remember { mutableStateOf(false) }
+    val col by animateColorAsState(targetValue = if (artElement.isExpanded) MaterialTheme.colors.secondary else MaterialTheme.colors.surface) {
 
     }
     Card(modifier = modifier.padding(8.dp), elevation = 4.dp) {
@@ -311,9 +317,9 @@ fun ArtCard(artElement: ArtElement, modifier: Modifier = Modifier){
                         }
                     }
                 )
-                ArtCardButton(expanded = expanded, onClick = { expanded = !expanded }, modifier = Modifier.fillMaxWidth())
+                ArtCardButton(expanded = artElement.isExpanded, onClick = { toggleExpanded(artElement) }, modifier = Modifier.fillMaxWidth())
             }
-            if (expanded) {
+            if (artElement.isExpanded) {
                 ArtCardDetails(
                     details = artElement.descResourceId, modifier = Modifier.padding(
                         start = dimensionResource(id = R.dimen.padding_medium),
@@ -377,7 +383,7 @@ private fun LightThemePreview() {
 @Preview
 @Composable
 private fun ArtCardPreview() {
-    ArtCard(artElement = ArtElement(R.string.Desert_Eagle, R.string.DE_desc, R.drawable.de))
+    ArtCard(artElement = ArtElement(R.string.Desert_Eagle, R.string.DE_desc, R.drawable.de), toggleExpanded = {})
 }
 //@Preview(showBackground = false)
 //@Composable
