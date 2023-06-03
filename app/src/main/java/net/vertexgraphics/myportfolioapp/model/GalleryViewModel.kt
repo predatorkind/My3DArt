@@ -1,12 +1,7 @@
 package net.vertexgraphics.myportfolioapp.model
 
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
-
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +18,7 @@ class GalleryViewModel: ViewModel() {
     // Backing property to avoid state changes from other classes
     val uiState: StateFlow<GalleryUiState> = _uiState.asStateFlow()
 
-    var lifetimeTaps by mutableStateOf(0)
+
 
     // ArtElement list
     private val _artElementList = Datasource().loadImageData().toMutableStateList()
@@ -55,10 +50,5 @@ class GalleryViewModel: ViewModel() {
         Log.d(TAG, "setExpandedState: ${artElement.isExpanded} index: ${indx}")
     }
 
-    fun increaseLifetimeTaps() {
-        /**
-         * Increases the lifetime taps by 1
-         */
-        lifetimeTaps += 1
-    }
+
 }

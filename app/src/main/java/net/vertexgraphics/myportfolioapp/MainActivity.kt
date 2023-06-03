@@ -7,9 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
-import net.vertexgraphics.myportfolioapp.ui.GalleryScreen
-import net.vertexgraphics.myportfolioapp.ui.GameScreen
-
 import net.vertexgraphics.myportfolioapp.ui.theme.MyPortfolioAppTheme
 
 
@@ -25,8 +22,7 @@ class MainActivity : ComponentActivity() {
             MyPortfolioAppTheme {
 
                 MyPortfolioScreen()
-                //GameScreen()
-                //GalleryScreen()
+
 
             }
         }
