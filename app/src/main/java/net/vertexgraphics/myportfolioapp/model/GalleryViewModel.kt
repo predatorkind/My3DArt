@@ -26,7 +26,7 @@ class GalleryViewModel: ViewModel() {
     var lifetimeTaps by mutableStateOf(0)
 
     // ArtElement list
-    private var _artElementList = mutableStateListOf<ArtElement>()
+    private val _artElementList = Datasource().loadImageData().toMutableStateList()
     val artElementList: List<ArtElement> = _artElementList
 
 
@@ -34,7 +34,7 @@ class GalleryViewModel: ViewModel() {
 
 
     init {
-        _artElementList.addAll(Datasource().loadImageData())
+
         Log.d(TAG, "Initializing")
     }
 
@@ -47,6 +47,7 @@ class GalleryViewModel: ViewModel() {
          */
 
         val indx = _artElementList.indexOf(artElement)
+        _artElementList
 
         _artElementList[indx].isExpanded = !_artElementList[indx].isExpanded
 

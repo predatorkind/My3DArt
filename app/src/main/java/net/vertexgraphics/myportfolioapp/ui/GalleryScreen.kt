@@ -232,7 +232,8 @@ fun ImageFlipButton(@StringRes label: Int, value: Int, onClick: (Int)->Unit){
 @Composable
 private  fun ArtList(artElementList: List<ArtElement>, toggleArtElementExpanded: (ArtElement) -> Unit, modifier: Modifier = Modifier) {
     LazyVerticalGrid(columns = GridCells.Adaptive(minSize = 150.dp)) {
-        items(items = artElementList) { artElement -> ArtCard(artElement = artElement, toggleExpanded = { toggleArtElementExpanded(artElement) }) }
+        items(items = artElementList) {
+                artElement -> ArtCard(artElement = artElement, toggleExpanded = { toggleArtElementExpanded(artElement) }) }
             //items(artElementList){  artElement -> ArtCard(artElement)
 
 
