@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
 
             MyPortfolioAppTheme {
 
-                MyPortfolioScreen()
+                AppScreen()
 
 
             }

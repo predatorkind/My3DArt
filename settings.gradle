@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "My3DArt"
+rootProject.name = "MyPortfolioApp"
 include ':app'

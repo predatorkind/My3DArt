@@ -13,13 +13,13 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.TextButton
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
+import androidx.compose.material.Card
+
+import androidx.compose.material.OutlinedButton
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import net.vertexgraphics.myportfolioapp.R
 import net.vertexgraphics.myportfolioapp.model.GameViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import net.vertexgraphics.myportfolioapp.ui.theme.MyPortfolioAppTheme
 
 @Composable
 fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
@@ -48,10 +49,7 @@ fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = stringResource(id = R.string.unscramble),
-            style = MaterialTheme.typography.h1
-        )
+
         GameLayout(
             onUserGuessChanged = { gameViewModel.updateUserGuess(it)},
             onKeyboardDone = { gameViewModel.checkUserGuess()},
@@ -130,7 +128,7 @@ fun GameLayout(
 
     Card(
         modifier = modifier,
-        elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
+        elevation = 5.dp
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(mediumPadding),
@@ -140,12 +138,12 @@ fun GameLayout(
             Text(
                 modifier = Modifier
                     .clip(androidx.compose.material3.MaterialTheme.shapes.medium)
-                    .background(androidx.compose.material3.MaterialTheme.colorScheme.surfaceTint)
+                    .background(MaterialTheme.colors.secondary)
                     .padding(horizontal = 10.dp, vertical = 4.dp)
                     .align(alignment = Alignment.End),
                 text = stringResource(id = R.string.word_count, wordCount),
-                style = androidx.compose.material3.MaterialTheme.typography.titleMedium,
-                color = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary
+                style = MaterialTheme.typography.body1,
+
             )
             Text(
                 text = currentScrambledWord,
@@ -219,7 +217,23 @@ private fun FinalScoreDialog(
 @Preview(showBackground = true)
 @Composable
 fun GameScreenPreview() {
-    MaterialTheme {
+    MyPortfolioAppTheme {
+        GameScreen()
+    }
+}
+
+@Preview
+@Composable
+private fun DarkThemePreview() {
+    MyPortfolioAppTheme(darkTheme = true) {
+        GameScreen()
+    }
+}
+
+@Preview
+@Composable
+private fun LightThemePreview() {
+    MyPortfolioAppTheme(darkTheme = false) {
         GameScreen()
     }
 }

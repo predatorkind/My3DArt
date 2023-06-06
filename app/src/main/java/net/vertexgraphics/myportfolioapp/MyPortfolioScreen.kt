@@ -2,10 +2,13 @@ package net.vertexgraphics.myportfolioapp
 
 
 import android.util.Log
+import android.widget.ImageButton
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -13,13 +16,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
@@ -31,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -57,7 +61,7 @@ enum class PortfolioScreens(@StringRes val title: Int) {
 }
 
 @Composable
-fun MyPortfolioScreen(
+fun AppScreen(
     navController: NavHostController = rememberNavController(),
     myPortfolioViewModel: MyPortfolioViewModel = viewModel()
 ){
@@ -90,11 +94,16 @@ fun MyPortfolioScreen(
             ){
                 MainMenu(
                     onGalleryButtonClicked = {
+                        Log.d(TAG, navController.currentDestination?.route.toString())
+                        Log.d(TAG, navController.currentBackStackEntry?.destination?.route.toString())
                         navController.navigate(route = PortfolioScreens.Gallery.name)
                         Log.d(TAG, "Gallery button clicked")
+                        Log.d(TAG, navController.currentDestination?.route.toString())
+                        Log.d(TAG, navController.currentBackStackEntry?.destination?.route.toString())
                     },
                     onUnscrambledButtonClicked = {
                         navController.navigate(route = PortfolioScreens.Unscramble.name)
+                        Log.d(TAG, "Unscramble button clicked")
                     },
                     modifier = Modifier.fillMaxHeight()
                 )
@@ -135,7 +144,8 @@ private fun MainMenu(
             onClick = { onGalleryButtonClicked() },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(dimensionResource(id = R.dimen.padding_big)),
+                .padding(dimensionResource(id = R.dimen.padding_big))
+                .testTag("go_to_gallery"),
         ) {
             Text(text = stringResource(id = R.string.gallery))
         }
@@ -151,7 +161,8 @@ private fun MainMenu(
 }
 
 
-@OptIn(ExperimentalMaterialApi::class)
+
+
 @Composable
 private fun TopBar(
     modifier: Modifier = Modifier,
@@ -168,17 +179,15 @@ private fun TopBar(
     var currentTaps by remember { mutableStateOf(0) }
 
 
-    Surface(onClick = {
-        currentTaps += 1
+    TopAppBar(
+        modifier = modifier,
+        contentPadding = PaddingValues(all = dimensionResource(id = R.dimen.padding_small)),
 
-        increaseLifetimeTaps()
-
-    },
-        modifier = modifier){
-        Row(modifier = modifier
-            .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ){
+    ){
+//        Row(modifier = modifier
+//            .fillMaxWidth(),
+//            verticalAlignment = Alignment.CenterVertically
+//        ){
 
             if (canNavigateBack) {
                 IconButton(onClick = navigateUp) {
@@ -189,24 +198,29 @@ private fun TopBar(
                 }
             }
 
-            Image(modifier = modifier
-                .size(64.dp)
-                .padding(8.dp),
+            Image(
+                modifier = modifier
+                    .size(64.dp)
+                    .padding(8.dp)
+                    .clickable {
+                        currentTaps++
+                        increaseLifetimeTaps()
+                    },
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = null)
             Text(
                 text = stringResource(id = currentScreen.title),
-                style = MaterialTheme.typography.h1
+                style = MaterialTheme.typography.h6
             )
             Spacer(modifier = Modifier
                 .weight(1f)
             )
             Text (
                 text = stringResource(R.string.tapCounter, currentTaps, lifetimeTaps),
-                style = MaterialTheme.typography.h1,
+                style = MaterialTheme.typography.h6,
                 modifier = Modifier.padding(end = dimensionResource(id = R.dimen.padding_medium))
             )
-        }
+        //}
     }
 
 }
@@ -215,7 +229,7 @@ private fun TopBar(
 @Composable
 fun MainMenuPreview() {
     MyPortfolioAppTheme() {
-        MainMenu(onGalleryButtonClicked = { /*TODO*/ }) {
+        TopAppBar() {
             
         }
     }
