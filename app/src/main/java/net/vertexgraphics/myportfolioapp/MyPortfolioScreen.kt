@@ -47,6 +47,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import net.vertexgraphics.myportfolioapp.model.MyPortfolioViewModel
+import net.vertexgraphics.myportfolioapp.ui.EmailClientScreen
 import net.vertexgraphics.myportfolioapp.ui.GalleryScreen
 import net.vertexgraphics.myportfolioapp.ui.GameScreen
 import net.vertexgraphics.myportfolioapp.ui.theme.MyPortfolioAppTheme
@@ -57,6 +58,7 @@ enum class PortfolioScreens(@StringRes val title: Int) {
     Start(title = R.string.app_name),
     Gallery(title = R.string.gallery),
     Unscramble(title = R.string.unscramble),
+    EmailClient(title = R.string.emails),
     Options(title = R.string.options), //todo
 }
 
@@ -105,6 +107,10 @@ fun AppScreen(
                         navController.navigate(route = PortfolioScreens.Unscramble.name)
                         Log.d(TAG, "Unscramble button clicked")
                     },
+                    onEmailsButtonClicked = {
+                        navController.navigate(route = PortfolioScreens.EmailClient.name)
+                        Log.d(TAG, "Emails button clicked")
+                    },
                     modifier = Modifier.fillMaxHeight()
                 )
             }
@@ -119,6 +125,11 @@ fun AppScreen(
             ) {
                 GameScreen()
             }
+            composable(
+                route = PortfolioScreens.EmailClient.name
+            ) {
+                EmailClientScreen()
+            }
         }
     }
 }
@@ -128,6 +139,7 @@ private fun MainMenu(
     modifier: Modifier = Modifier,
     onGalleryButtonClicked: () -> Unit,
     onUnscrambledButtonClicked: () -> Unit,
+    onEmailsButtonClicked: () -> Unit,
     
     ){
     Column(
@@ -156,6 +168,14 @@ private fun MainMenu(
                 .padding(dimensionResource(id = R.dimen.padding_big)),
         ) {
             Text(text = stringResource(id = R.string.unscramble))
+        }
+        Button(
+            onClick = { onEmailsButtonClicked() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(dimensionResource(id = R.dimen.padding_big)),
+        ) {
+            Text(text = stringResource(id = R.string.emails))
         }
     }
 }

@@ -30,4 +30,19 @@
     <string name="gallery">Gallery</string>
     <string name="options">Options</string>
     <string name="back_button">Back Button\n</string>
+    <string name="tab_inbox">Inbox</string>
+    <string name="tab_sent">Sent</string>
+    <string name="tab_drafts">Drafts\n</string>
+    <string name="tab_spam">Spam</string>
+    <string name="navigation_rail">Navigation Rail</string>
+    <string name="profile">Profile</string>
+    <string name="navigation_bottom">Bottom Navigation\n</string>
+    <string name="details_screen">Details Screen\n</string>
+    <string name="navigation_back">Navigate Back</string>
+    <string name="continue_composing">Continue Composing</string>
+    <string name="move_to_inbox">Move to Inbox</string>
+    <string name="delete">Delete</string>
+    <string name="reply">Reply</string>
+    <string name="reply_all">Reply to All</string>
+    <string name="emails">Emails</string>
 </resources>
