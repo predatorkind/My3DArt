@@ -2,16 +2,15 @@ package net.vertexgraphics.myportfolioapp.ui.theme
 
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import net.vertexgraphics.myportfolioapp.AppScreen
 import net.vertexgraphics.myportfolioapp.ui.GameScreen
 
-private val DarkColorPalette = darkColors(
+private val DarkColorPalette = darkColorScheme(
     primary = Yellow,
 
     secondary = GreenDarkSelected,
@@ -22,9 +21,17 @@ private val DarkColorPalette = darkColors(
     onPrimary = Color.Black,
     onSecondary = Color.Black,
 
+    onPrimaryContainer = Color.Black,
+    secondaryContainer = GreenDarkSelected,
+    onSecondaryContainer = Yellow,
+    onTertiary = Color.Black,
+    onTertiaryContainer = Color.Black,
+    surfaceVariant = Green500,
+    onSurfaceVariant = Yellow
+
 )
 
-private val LightColorPalette = lightColors(
+private val LightColorPalette = lightColorScheme(
     primary = Yellow2,
 
     secondary = GreenSelected,
@@ -34,14 +41,15 @@ private val LightColorPalette = lightColors(
     onBackground = Color.White,
     onPrimary = Color.Black,
     onSecondary = Color.White,
-    /* Other default colors to override
-    ,
 
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black,
-    */
+    onPrimaryContainer = Color.Black,
+    secondaryContainer = GreenSelected,
+    onSecondaryContainer = Color.White,
+    onTertiary = Color.Black,
+    onTertiaryContainer = Color.Black,
+    surfaceVariant = Green,
+    onSurfaceVariant = Color.White
+
 )
 
 @Composable
@@ -53,7 +61,7 @@ fun MyPortfolioAppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Co
     }
 
     MaterialTheme(
-        colors = colors,
+        colorScheme = colors,
         typography = Typography,
         shapes = Shapes,
         content = content
@@ -62,7 +70,7 @@ fun MyPortfolioAppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Co
 
 @Preview(showBackground = true)
 @Composable
-fun mainPreview(){
+fun MainPreview(){
     MyPortfolioAppTheme(darkTheme = false) {
         GameScreen()
         
@@ -70,7 +78,7 @@ fun mainPreview(){
 }
 @Preview(showBackground = true)
 @Composable
-fun mainPreviewDark(){
+fun MainPreviewDark(){
     MyPortfolioAppTheme(darkTheme = true) {
         GameScreen()
 

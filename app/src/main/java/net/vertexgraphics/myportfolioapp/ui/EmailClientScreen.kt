@@ -88,7 +88,8 @@ private fun EmailClientContent(
     navigationItemContentList: List<NavigationItemContent>,
     modifier: Modifier = Modifier
     ) {
-    Box(modifier = modifier) {
+    Box(modifier = modifier
+        .background(color = MaterialTheme.colorScheme.background)) {
         val navigationRailContentDescription = stringResource(R.string.navigation_rail)
         EmailClientNavigationRail(
             currentTab = emailClientUiState.currentMailbox,
@@ -100,7 +101,7 @@ private fun EmailClientContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.inverseOnSurface)
+                //.background(MaterialTheme.colorScheme.inverseOnSurface)
         ) {
             EmailClientListOnlyContent(
                 emailClientUiState = emailClientUiState,

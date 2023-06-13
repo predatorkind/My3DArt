@@ -29,17 +29,16 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -215,9 +214,7 @@ fun ImageSurface(context: Context, scale: Float, rotation: Float, offset: Offset
 fun ImageFlipButton(@StringRes label: Int, value: Int, onClick: (Int)->Unit){
 
     Button(onClick = { onClick(value)}, modifier = Modifier.width(120.dp),
-        colors = ButtonDefaults.buttonColors( backgroundColor =
-        Color(LocalContext.current.resources.getColor(R.color.green, LocalContext.current.theme))
-        )) {
+        ) {
         Text(text = stringResource(id = label))
     }
 }
@@ -241,10 +238,10 @@ fun ArtCard(
     modifier: Modifier = Modifier){
     var fontSizeMultiplier by remember { mutableStateOf(1f) }
     //var expanded by remember { mutableStateOf(false) }
-    val col by animateColorAsState(targetValue = if (artElement.isExpanded) MaterialTheme.colors.secondary else MaterialTheme.colors.surface) {
+    val col by animateColorAsState(targetValue = if (artElement.isExpanded) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.surface) {
 
     }
-    Card(modifier = modifier.padding(8.dp), elevation = 4.dp) {
+    Card(modifier = modifier.padding(8.dp)) {
         Column (modifier = Modifier
             .animateContentSize(
                 animationSpec = spring(
@@ -269,8 +266,8 @@ fun ArtCard(
                     modifier = Modifier
                         .padding(16.dp)
                         .fillMaxWidth(0.7f),
-                    color = MaterialTheme.colors.onSurface,
-                    style = MaterialTheme.typography.h6.copy(fontSize = MaterialTheme.typography.h6.fontSize * fontSizeMultiplier),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.titleLarge.copy(fontSize = MaterialTheme.typography.titleLarge.fontSize * fontSizeMultiplier),
                     maxLines = 1,
                     overflow = TextOverflow.Visible,
                     onTextLayout = {
@@ -303,7 +300,7 @@ private fun ArtCardDetails(@StringRes details: Int, modifier: Modifier){
         modifier = modifier
     ){
         Text(text = stringResource(id = details),
-            style = MaterialTheme.typography.body1)
+            style = MaterialTheme.typography.bodyLarge)
     }
 }
 
@@ -319,7 +316,7 @@ private fun ArtCardButton(
         Icon(
             imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore ,
             //painter = painterResource(id = R.drawable.expand_more),
-            tint = MaterialTheme.colors.onSurface,
+            tint = MaterialTheme.colorScheme.onSurface,
             contentDescription = stringResource(id = R.string.expand_button_content_description)
         )
     }

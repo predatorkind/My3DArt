@@ -11,15 +11,15 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Button
-import androidx.compose.material.Card
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.TextButton
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -128,7 +128,6 @@ fun GameLayout(
 
     Card(
         modifier = modifier,
-        elevation = 5.dp
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(mediumPadding),
@@ -138,11 +137,11 @@ fun GameLayout(
             Text(
                 modifier = Modifier
                     .clip(androidx.compose.material3.MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colors.secondary)
+                    .background(MaterialTheme.colorScheme.secondary)
                     .padding(horizontal = 10.dp, vertical = 4.dp)
                     .align(alignment = Alignment.End),
                 text = stringResource(id = R.string.word_count, wordCount),
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.bodyLarge,
 
             )
             Text(

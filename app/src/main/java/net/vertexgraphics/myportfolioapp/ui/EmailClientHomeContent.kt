@@ -55,6 +55,7 @@ fun EmailClientListOnlyContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = dimensionResource(R.dimen.padding_small))
+
             )
         }
         items(emails, key = { email -> email.id }) { email ->
@@ -119,9 +120,9 @@ fun EmailClientEmailListItem(
         modifier = modifier,
         colors = CardDefaults.cardColors(
             containerColor = if (selected)
-                MaterialTheme.colorScheme.primaryContainer
+                MaterialTheme.colorScheme.secondary
             else
-                MaterialTheme.colorScheme.secondaryContainer
+                MaterialTheme.colorScheme.surface
         ),
         onClick = onCardClick
     ) {
@@ -163,7 +164,7 @@ private fun EmailClientEmailItemHeader(email: Email, modifier: Modifier = Modifi
         EmailClientProfileImage(
             drawableResource = email.sender.avatar,
             description = email.sender.fullName,
-            modifier = Modifier.size(dimensionResource(R.dimen.padding_small))
+            modifier = Modifier.size(dimensionResource(R.dimen.profile_image_size))
         )
         Column(
             modifier = Modifier
@@ -205,12 +206,12 @@ fun EmailClientProfileImage(
 @Composable
 fun Logo(
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.primary
+
 ) {
     Image(
         painter = painterResource(R.drawable.logo),
         contentDescription = stringResource(R.string.logo),
-        colorFilter = ColorFilter.tint(color),
+
         modifier = modifier
     )
 }
